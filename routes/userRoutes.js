@@ -3,6 +3,8 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
-router.post("/register", authController.signup);
+router.post("/register", authController.register);
 
 module.exports = router;
+
+// This file has the Routes defined for user
