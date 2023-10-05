@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 var validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
   name: { type: String, require: [true, "Please tell your name"] },
@@ -14,6 +15,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: [true, "Please provide a password"],
     minlength: 8,
+    select: false, // by default set this false so that it doesnt show on query o/p unless asked
   },
   passwordConfirm: {
     type: String,
@@ -27,6 +29,13 @@ const userSchema = new mongoose.Schema({
     },
   },
 });
+
+// On the schema create a method of comparing password
+//! when using compareSyn it will block the main thread
+userSchema.methods.correctPassword = async (
+  candiatePassword,
+  correctPassword
+) => await bcrypt.compare(candiatePassword, correctPassword);
 
 // Create a Model out of the Schema
 const User = mongoose.model("User", userSchema);

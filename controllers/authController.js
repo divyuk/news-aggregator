@@ -1,3 +1,5 @@
+// Controllers which deals with application logic for user.
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
@@ -27,11 +29,27 @@ exports.register = async (req, res) => {
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.email, 8),
+    password: bcrypt.hashSync(req.body.password, 8),
   });
 
   //! 2. Function call to send JWT Token
   createAndSendToken(newUser, 201, res);
 };
 
-// Controllers which deals with application logic for user.
+exports.login = async (req, res) => {
+  let { email, password } = req.body;
+  // password = bcrypt.hashSync(req.body.password, 8);
+  //! 1. Check if there is email and password provided or not
+  if (!email || !password)
+    return res
+      .status(400)
+      .send({ status: "Please provide email and password!" });
+
+  //! 2. Find email from the db and check its correctness
+  const user = await User.findOne({ email }).select("+password");
+  if (!user || !(await user.correctPassword(password, user.password)))
+    return res.status(401).send({ status: "Incorrect email or password" }); // Unauthorize
+
+  //! 3. If eveything is ok send the token to client
+  createAndSendToken(user, 200, res);
+};
