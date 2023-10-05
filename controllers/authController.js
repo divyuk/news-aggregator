@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsyn");
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -37,7 +38,7 @@ exports.register = async (req, res) => {
   createAndSendToken(newUser, 201, res);
 };
 
-exports.login = async (req, res) => {
+exports.login = catchAsync(async (req, res, next) => {
   let { email, password } = req.body;
   // password = bcrypt.hashSync(req.body.password, 8);
   //! 1. Check if there is email and password provided or not
@@ -51,4 +52,4 @@ exports.login = async (req, res) => {
 
   //! 3. If eveything is ok send the token to client
   createAndSendToken(user, 200, res);
-};
+});
