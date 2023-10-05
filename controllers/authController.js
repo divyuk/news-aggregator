@@ -3,6 +3,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const AppError = require("../utils/appError");
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -41,14 +42,12 @@ exports.login = async (req, res) => {
   // password = bcrypt.hashSync(req.body.password, 8);
   //! 1. Check if there is email and password provided or not
   if (!email || !password)
-    return res
-      .status(400)
-      .send({ status: "Please provide email and password!" });
+    return next(new AppError("Please provide email and password!", 400));
 
   //! 2. Find email from the db and check its correctness
   const user = await User.findOne({ email }).select("+password");
   if (!user || !(await user.correctPassword(password, user.password)))
-    return res.status(401).send({ status: "Incorrect email or password" }); // Unauthorize
+    return next(new AppError("Incorrect email or password", 401)); // Unauthorize
 
   //! 3. If eveything is ok send the token to client
   createAndSendToken(user, 200, res);
