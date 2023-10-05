@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const userRouter = require("./routes/userRoutes");
 const { default: mongoose } = require("mongoose");
+const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 // Middleware for parsing json.
@@ -20,6 +21,9 @@ mongoose
 
 // Mounting the Router | userRouter is middleware
 app.use("/api/v1/users", userRouter);
+
+// Global Error Handler
+app.use(globalErrorHandler);
 
 module.exports = app;
 
