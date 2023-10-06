@@ -30,3 +30,5 @@ exports.updatePreferences = catchAsyn(async (req, res, next) => {
   );
   res.status(200).json({ status: "success", data: updatedPrefernces });
 });
+
+exports.news = catchAsyn(async (req, res, next) => {});
