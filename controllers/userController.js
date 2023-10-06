@@ -94,3 +94,9 @@ exports.getFavorite = catchAsyn(async (req, res, next) => {
   );
   res.status(200).json({ status: "success", data: filteredNews });
 });
+
+exports.getFromKeyword = catchAsyn(async (req, res, next) => {
+  const { keyword } = req.params; // Get the keyword
+  const { results } = await newsService(null, null, keyword);
+  res.status(200).json({ status: "success", results });
+});
