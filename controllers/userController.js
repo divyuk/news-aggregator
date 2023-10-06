@@ -1,1 +1,3 @@
-exports.preferences = (req, res) => {};
+exports.preferences = (req, res) => {
+  console.log("I am preference", req.user);
+};
