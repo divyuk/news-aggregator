@@ -14,7 +14,8 @@ module.exports = async (category, country) => {
   if (country) baseUrl += `&country=${country}`;
 
   try {
-    const request = await axios.get(baseUrl);
+    const params = { page: 1696599552180915156 }; // Locking the page so that it doesnt give different results
+    const request = await axios.get(baseUrl, { params });
     return request.data;
   } catch (err) {
     throw new AppError(
