@@ -7,7 +7,11 @@ const router = express.Router();
 router.post("/register", authController.register);
 router.get("/login", authController.login);
 
-router.get("/preferences", authController.protect, userController.preferences);
+// Apply the protect middleware for the below routes
+router.use(authController.protect);
+
+router.get("/preferences", userController.preferences);
+router.put("/preferences", userController.updatePreferences);
 
 module.exports = router;
 
