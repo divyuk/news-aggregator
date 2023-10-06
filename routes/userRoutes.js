@@ -15,6 +15,8 @@ router.put("/preferences", userController.updatePreferences);
 router.get("/news", userController.news);
 router.post("/news/:id/read", userController.read);
 router.get("/news/read", userController.getNews);
+router.post("/news/:id/favorite", userController.favorite);
+router.get("/news/favorite", userController.getFavorite);
 
 module.exports = router;
 

@@ -66,3 +66,31 @@ exports.getNews = catchAsyn(async (req, res, next) => {
   );
   res.status(200).json({ status: "success", data: filteredNews });
 });
+
+// POST: Controller to mark favorite article
+exports.favorite = catchAsyn(async (req, res, next) => {
+  const userId = req.user; // User Id
+  const { id: articleId } = req.params;
+  const user = await User.findById(userId);
+  if (!user.favoriteArticles.includes(articleId)) {
+    user.favoriteArticles.push(articleId);
+    await user.save();
+  } else
+    return next(
+      new AppError("This Article Already exist in your favourites", 400)
+    );
+
+  res.status(200).json({ status: "success" });
+});
+
+// GET : Favourites
+exports.getFavorite = catchAsyn(async (req, res, next) => {
+  const { results: allNews } = await newsService();
+  const userId = req.user; // User Id
+  const user = await User.findById(userId); // user.readArticles
+  const favoriteArray = user.favoriteArticles;
+  const filteredNews = allNews.filter((news) =>
+    favoriteArray.includes(news.article_id)
+  );
+  res.status(200).json({ status: "success", data: filteredNews });
+});
