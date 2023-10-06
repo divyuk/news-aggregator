@@ -39,14 +39,8 @@ const userSchema = new mongoose.Schema({
   },
   country: {
     type: String,
-    // default: "in",
   },
-  readArticles: [
-    {
-      type: String,
-      ref: "Article",
-    },
-  ],
+  readArticles: [String],
   favoriteArticles: [
     {
       type: mongoose.Schema.Types.ObjectId,

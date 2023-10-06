@@ -47,6 +47,22 @@ exports.read = catchAsyn(async (req, res, next) => {
   if (!user.readArticles.includes(articleId)) {
     user.readArticles.push(articleId);
     await user.save();
-  }
+  } else
+    return next(
+      AppError("This Article Already exist in your read collections", 400)
+    );
+
   res.status(200).json({ status: "success" });
+});
+
+// GET : To get all the read news of the user
+exports.getNews = catchAsyn(async (req, res, next) => {
+  const { results: allNews } = await newsService();
+  const userId = req.user; // User Id
+  const user = await User.findById(userId); // user.readArticles
+  const readArray = user.readArticles;
+  const filteredNews = allNews.filter((news) =>
+    readArray.includes(news.article_id)
+  );
+  res.status(200).json({ status: "success", data: filteredNews });
 });
