@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsyn = require("../utils/catchAsyn");
+const newsService = require("../services/newsService");
 
 const filterObj = (obj, ...allowedFields) => {
   newObj = {};
@@ -22,7 +23,7 @@ exports.updatePreferences = catchAsyn(async (req, res, next) => {
     return next(AppError("This route is not for updating password", 400));
 
   //! Filter out unawanted fields and only include whats needed
-  const filteredObj = filterObj(req.body, "category", "sources", "country");
+  const filteredObj = filterObj(req.body, "category", "country");
   const updatedPrefernces = await User.findByIdAndUpdate(
     req.user.id,
     filteredObj,
@@ -31,4 +32,9 @@ exports.updatePreferences = catchAsyn(async (req, res, next) => {
   res.status(200).json({ status: "success", data: updatedPrefernces });
 });
 
-exports.news = catchAsyn(async (req, res, next) => {});
+exports.news = catchAsyn(async (req, res, next) => {
+  const { category, country } = await User.findById(req.user);
+
+  const data = await newsService(category, country);
+  res.status(200).json({ status: "success", data });
+});

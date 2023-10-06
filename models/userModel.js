@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 var validator = require("validator");
 const bcrypt = require("bcrypt");
+const Article = require("./articleModel");
 
 const userSchema = new mongoose.Schema({
   name: { type: String, require: [true, "Please tell your name"] },
@@ -40,6 +41,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "in",
   },
+  readArticles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Article",
+    },
+  ],
+  favoriteArticles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Article",
+    },
+  ],
 });
 
 // On the schema create a method of comparing password
