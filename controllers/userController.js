@@ -38,3 +38,15 @@ exports.news = catchAsyn(async (req, res, next) => {
   const data = await newsService(category, country);
   res.status(200).json({ status: "success", data });
 });
+
+// POST : To mark the article Read
+exports.read = catchAsyn(async (req, res, next) => {
+  const userId = req.user; // User Id
+  const { id: articleId } = req.params;
+  const user = await User.findById(userId);
+  if (!user.readArticles.includes(articleId)) {
+    user.readArticles.push(articleId);
+    await user.save();
+  }
+  res.status(200).json({ status: "success" });
+});

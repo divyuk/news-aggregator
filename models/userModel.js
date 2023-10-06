@@ -31,19 +31,19 @@ const userSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    default: "technology",
+    // default: "technology",
   },
   sources: {
     type: String,
-    default: "bbc-news",
+    // default: "bbc-news",
   },
   country: {
     type: String,
-    default: "in",
+    // default: "in",
   },
   readArticles: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Article",
     },
   ],

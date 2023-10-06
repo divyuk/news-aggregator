@@ -13,6 +13,7 @@ router.use(authController.protect);
 router.get("/preferences", userController.preferences);
 router.put("/preferences", userController.updatePreferences);
 router.get("/news", userController.news);
+router.post("/news/:id/read", userController.read);
 
 module.exports = router;
 
