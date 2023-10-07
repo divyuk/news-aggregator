@@ -2,7 +2,9 @@ const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsyn = require("../utils/catchAsyn");
 const newsService = require("../services/newsService");
-
+const Favourite = require("../models/favouriteModel");
+const Article = require("../models/articleModel");
+const mongoose = require("mongoose");
 const filterObj = (obj, ...allowedFields) => {
   newObj = {};
   Object.keys(obj).forEach((key) => {
@@ -68,26 +70,66 @@ exports.getNews = catchAsyn(async (req, res, next) => {
 });
 
 // POST: Controller to mark favorite article
-exports.favorite = catchAsyn(async (req, res, next) => {
+exports.favourite = catchAsyn(async (req, res, next) => {
   const userId = req.user; // User Id
   const { id: articleId } = req.params;
-  const user = await User.findById(userId);
-  if (!user.favoriteArticles.includes(articleId)) {
-    user.favoriteArticles.push(articleId);
-    await user.save();
-  } else
-    return next(
-      new AppError("This Article Already exist in your favourites", 400)
-    );
+  const {
+    title,
+    link,
+    keywords,
+    creator,
+    video_url,
+    description,
+    content,
+    pubDate,
+    image_url,
+    source_id,
+    source_priority,
+    country,
+    category,
+    language,
+  } = req.body;
+  const isFavorite = await Favourite.exists({
+    user: userId,
+    newsArticle: articleId,
+  });
+  if (isFavorite)
+    return next(new AppError("Already present in the favorites", 400));
+  await Favourite.create({
+    user: userId,
+    newsArticle: articleId,
+  });
+  const newsArticle = await Article.find({ article_id: articleId });
+  if (newsArticle.length == 0) {
+    const newNewsArticle = new Article({
+      title,
+      link,
+      keywords,
+      creator,
+      video_url,
+      description,
+      content,
+      pubDate,
+      image_url,
+      source_id,
+      source_priority,
+      country,
+      category,
+      language,
+    });
+
+    // Save the new news article to the "NewsArticle" collection
+    await newNewsArticle.save();
+  }
 
   res.status(200).json({ status: "success" });
 });
 
 // GET : Favourites
-exports.getFavorite = catchAsyn(async (req, res, next) => {
-  const { results: allNews } = await newsService();
+exports.getFavourite = catchAsyn(async (req, res, next) => {
   const userId = req.user; // User Id
-  const user = await User.findById(userId); // user.readArticles
+
+  const user = await Favourite.findById(userId); // user.readArticles
   const favoriteArray = user.favoriteArticles;
   const filteredNews = allNews.filter((news) =>
     favoriteArray.includes(news.article_id)

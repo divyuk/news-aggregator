@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const articleSchema = new mongoose.Schema({
   article_id: {
     type: String,
-    required: true,
   },
   title: {
     type: String,
@@ -18,7 +17,7 @@ const articleSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  creator: String,
+  creator: [String],
   video_url: String,
   description: String,
   content: String,
