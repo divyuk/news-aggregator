@@ -72,7 +72,7 @@ exports.getNews = catchAsyn(async (req, res, next) => {
 // POST: Controller to mark favorite article
 exports.favourite = catchAsyn(async (req, res, next) => {
   const userId = req.user; // User Id
-  const { id: articleId } = req.params;
+  let { id: articleId } = req.params;
   const {
     title,
     link,
@@ -89,11 +89,11 @@ exports.favourite = catchAsyn(async (req, res, next) => {
     category,
     language,
   } = req.body;
-  const isFavorite = await Favourite.exists({
-    user: userId,
-    newsArticle: articleId,
+  const isFavorite = await Favourite.find({
+    user: userId, // User ID
+    newsArticle: articleId, // News article ID
   });
-  if (isFavorite)
+  if (isFavorite.length > 0)
     return next(new AppError("Already present in the favorites", 400));
   await Favourite.create({
     user: userId,
@@ -102,6 +102,7 @@ exports.favourite = catchAsyn(async (req, res, next) => {
   const newsArticle = await Article.find({ article_id: articleId });
   if (newsArticle.length == 0) {
     const newNewsArticle = new Article({
+      article_id: articleId,
       title,
       link,
       keywords,
