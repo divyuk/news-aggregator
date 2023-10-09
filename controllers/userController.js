@@ -4,7 +4,8 @@ const catchAsyn = require("../utils/catchAsyn");
 const newsService = require("../services/newsService");
 const Favourite = require("../models/favouriteModel");
 const Article = require("../models/articleModel");
-const mongoose = require("mongoose");
+const Read = require("../models/readModel");
+
 const filterObj = (obj, ...allowedFields) => {
   newObj = {};
   Object.keys(obj).forEach((key) => {
@@ -44,29 +45,76 @@ exports.news = catchAsyn(async (req, res, next) => {
 // POST : To mark the article Read
 exports.read = catchAsyn(async (req, res, next) => {
   const userId = req.user; // User Id
-  const { id: articleId } = req.params;
-  const user = await User.findById(userId);
-  if (!user.readArticles.includes(articleId)) {
-    user.readArticles.push(articleId);
-    await user.save();
-  } else
-    return next(
-      AppError("This Article Already exist in your read collections", 400)
-    );
+  let { id: articleId } = req.params;
+  const {
+    title,
+    link,
+    keywords,
+    creator,
+    video_url,
+    description,
+    content,
+    pubDate,
+    image_url,
+    source_id,
+    source_priority,
+    country,
+    category,
+    language,
+  } = req.body;
+  const isRead = await Read.find({
+    user: userId, // User ID
+    newsArticle: articleId, // News article ID
+  });
+  if (isRead.length > 0)
+    return next(new AppError("Already present in the Read", 400));
+  await Read.create({
+    user: userId,
+    newsArticle: articleId,
+  });
+  const newsArticle = await Article.find({ article_id: articleId });
+  if (newsArticle.length == 0) {
+    const newNewsArticle = new Article({
+      article_id: articleId,
+      title,
+      link,
+      keywords,
+      creator,
+      video_url,
+      description,
+      content,
+      pubDate,
+      image_url,
+      source_id,
+      source_priority,
+      country,
+      category,
+      language,
+    });
+
+    // Save the new news article to the "NewsArticle" collection
+    await newNewsArticle.save();
+  }
 
   res.status(200).json({ status: "success" });
 });
 
 // GET : To get all the read news of the user
 exports.getNews = catchAsyn(async (req, res, next) => {
-  const { results: allNews } = await newsService();
   const userId = req.user; // User Id
-  const user = await User.findById(userId); // user.readArticles
-  const readArray = user.readArticles;
-  const filteredNews = allNews.filter((news) =>
-    readArray.includes(news.article_id)
-  );
-  res.status(200).json({ status: "success", data: filteredNews });
+
+  // Find all "Read" documents for the user
+  const readArticles = await Read.find({ user: userId });
+
+  // Extract the newsArticle IDs from the readArticles
+  const readArticleIds = readArticles.map((read) => read.newsArticle);
+
+  // Find the corresponding news articles in the "NewsArticle" collection
+  const newsArticles = await Article.find({
+    article_id: { $in: readArticleIds },
+  });
+
+  res.status(200).json({ status: "success", readNews: newsArticles });
 });
 
 // POST: Controller to mark favorite article
@@ -131,7 +179,7 @@ exports.getFavourite = catchAsyn(async (req, res, next) => {
   const userId = req.user; // User Id
 
   // Find all "Favorite" documents for the user
-  const favoriteArticles = await Favourite.find({ user: userId });
+  const readArticles = await Favourite.find({ user: userId });
 
   // Extract the newsArticle IDs from the favoriteArticles
   const favoriteArticleIds = favoriteArticles.map(
