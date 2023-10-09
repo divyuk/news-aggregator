@@ -130,12 +130,20 @@ exports.favourite = catchAsyn(async (req, res, next) => {
 exports.getFavourite = catchAsyn(async (req, res, next) => {
   const userId = req.user; // User Id
 
-  const user = await Favourite.findById(userId); // user.readArticles
-  const favoriteArray = user.favoriteArticles;
-  const filteredNews = allNews.filter((news) =>
-    favoriteArray.includes(news.article_id)
+  // Find all "Favorite" documents for the user
+  const favoriteArticles = await Favourite.find({ user: userId });
+
+  // Extract the newsArticle IDs from the favoriteArticles
+  const favoriteArticleIds = favoriteArticles.map(
+    (favorite) => favorite.newsArticle
   );
-  res.status(200).json({ status: "success", data: filteredNews });
+
+  // Find the corresponding news articles in the "NewsArticle" collection
+  const newsArticles = await Article.find({
+    article_id: { $in: favoriteArticleIds },
+  });
+
+  res.status(200).json({ status: "success", favoriteNews: newsArticles });
 });
 
 exports.getFromKeyword = catchAsyn(async (req, res, next) => {
