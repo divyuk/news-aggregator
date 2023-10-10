@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const userRouter = require("./routes/userRoutes");
+const newsRouter = require("./routes/newsRoutes");
 const { default: mongoose } = require("mongoose");
 const globalErrorHandler = require("./controllers/errorController");
 
@@ -21,6 +22,8 @@ mongoose
 
 // Mounting the Router | userRouter is middleware
 app.use("/api/v1/users", userRouter);
+
+app.use("/api/v1/news", newsRouter);
 
 // Global Error Handler
 app.use(globalErrorHandler);

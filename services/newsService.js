@@ -15,8 +15,8 @@ module.exports = async (category, country, keyword) => {
   if (keyword) baseUrl += `&q=${keyword}`;
 
   try {
-    const params = { page: 1696599552180915156 }; // Locking the page so that it doesnt give different results
-    const request = await axios.get(baseUrl, { params });
+    // const params = { page: 1696599552180915156 }; // Locking the page so that it doesnt give different results
+    const request = await axios.get(baseUrl);
     return request.data;
   } catch (err) {
     throw new AppError(

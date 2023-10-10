@@ -40,8 +40,6 @@ const userSchema = new mongoose.Schema({
   country: {
     type: String,
   },
-  readArticles: [String],
-  favoriteArticles: [String],
 });
 
 // On the schema create a method of comparing password
