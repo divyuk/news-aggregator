@@ -1,9 +1,6 @@
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsyn = require("../utils/catchAsyn");
-const Favourite = require("../models/favouriteModel");
-const Article = require("../models/articleModel");
-const Read = require("../models/readModel");
 
 const filterObj = (obj, ...allowedFields) => {
   newObj = {};

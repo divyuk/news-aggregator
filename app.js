@@ -15,11 +15,12 @@ const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
-mongoose
-  .connect(DB)
-  .then(() => console.log("Successfully DB connected"))
-  .catch((err) => console.log("Problem in connecting Database", err));
-
+if (process.env.NODE_ENV != "test") {
+  mongoose
+    .connect(DB)
+    .then(() => console.log("Successfully DB connected"))
+    .catch((err) => console.log("Problem in connecting Database", err));
+}
 // Mounting the Router | userRouter is middleware
 app.use("/api/v1/users", userRouter);
 

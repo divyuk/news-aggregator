@@ -55,24 +55,6 @@ exports.addArticles = (Model) =>
     //! 2. Get the articles id from the parameter
     const { id: articleId } = req.params;
 
-    //! 3. Get the body of article
-    const {
-      title,
-      link,
-      keywords,
-      creator,
-      video_url,
-      description,
-      content,
-      pubDate,
-      image_url,
-      source_id,
-      source_priority,
-      country,
-      category,
-      language,
-    } = req.body;
-
     const doc = await Model.find({
       user: userId,
       newsArticle: articleId,

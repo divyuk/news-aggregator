@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "mocha"
+    "test": "mocha --recursive 'test/**/*.js' --timeout 99999 --exit"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.1"
   }

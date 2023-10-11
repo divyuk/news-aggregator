@@ -27,17 +27,22 @@ const createAndSendToken = (user, statusCode, res) => {
   res.status(statusCode).send({ status: "success", token, data: { user } });
 };
 
-exports.register = async (req, res) => {
-  //! 1. New User signsup
+exports.register = catchAsync(async (req, res, next) => {
+  //! 1.  Check if there is already a User with the given email or not
+  const doc = await User.find({ email: req.body.email });
+  if (doc.length > 0)
+    return next(new AppError("This email ID is already registered", 409));
+
+  //! 2. New User signsup
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
   });
 
-  //! 2. Function call to send JWT Token
+  //! 3. Function call to send JWT Token
   createAndSendToken(newUser, 201, res);
-};
+});
 
 exports.login = catchAsync(async (req, res, next) => {
   let { email, password } = req.body;
