@@ -21,13 +21,11 @@ before(async function () {
 // Not Using async await as Mocha will not be able to parse the error properly
 afterEach(function (done) {
   console.log("Running before each clause");
-  if (mongoose.connection)
-    mongoose.connection.collections.users.drop((err) => {
-      if (err) {
-        console.log("Problem in dropping", err);
-      }
-      done(); // Pass the error, if any, to Mocha
-    });
+  mongoose.connection.collections.users.drop((err) => {
+    console.log("Dropped User Collections");
+
+    done(); // Pass the error, if any, to Mocha
+  });
 });
 
 after(async () => {
