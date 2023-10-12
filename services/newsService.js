@@ -1,5 +1,4 @@
 const axios = require("axios");
-const { count } = require("../models/userModel");
 const AppError = require("../utils/appError");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
@@ -15,7 +14,6 @@ module.exports = async (category, country, keyword) => {
   if (keyword) baseUrl += `&q=${keyword}`;
 
   try {
-    // const params = { page: 1696599552180915156 }; // Locking the page so that it doesnt give different results
     const request = await axios.get(baseUrl);
     return request.data;
   } catch (err) {
