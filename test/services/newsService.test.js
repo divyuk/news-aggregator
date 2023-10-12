@@ -246,7 +246,8 @@ describe("News Service API ", () => {
       response: { data: { message: "Something went wrong" } },
     });
     try {
-      const t = await newsService();
+      // Calling this will call the stubbed axios
+      await newsService();
     } catch (error) {
       expect(error.message).to.equal(
         "Error fetching data from the API: Something went wrong"
