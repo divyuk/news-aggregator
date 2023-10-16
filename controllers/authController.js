@@ -35,7 +35,6 @@ exports.register = catchAsync(async (req, res, next) => {
 
   //! 2. New User signsup
   const newUser = await User.create({
-    name: req.body.name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
   });
