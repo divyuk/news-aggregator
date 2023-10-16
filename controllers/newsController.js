@@ -24,3 +24,5 @@ exports.getRead = factory.getArticles(Read);
 exports.updateFavourite = factory.addArticles(Favourite);
 
 exports.getFavourite = factory.getArticles(Favourite);
+
+exports.deleteFavourite = factory.deleteArticles(Favourite);
