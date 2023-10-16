@@ -21,6 +21,8 @@ router.route("/:id/favourite").post(newsController.updateFavourite);
 // router.get("/news/favorite", userController.getFavourite);
 router.route("/favourite").get(newsController.getFavourite);
 
+router.route("/:id/favourite").delete(newsController.deleteFavourite);
+
 // router.get("/news/search/:keyword", userController.getFromKeyword);
 
 router.route("/search/:keyword").get(newsController.getFromKeyword);
