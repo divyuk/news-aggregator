@@ -1,10 +1,16 @@
 const express = require("express");
 const authController = require("../controllers/authController");
 const userController = require("../controllers/userController");
-
+const { validateRegister } = require("../helpers/validate");
+const handleValidation = require("../middlewares/validateMiddleware");
 const router = express.Router();
 
-router.post("/register", authController.register);
+router.post(
+  "/register",
+  validateRegister,
+  handleValidation,
+  authController.register
+);
 router.post("/login", authController.login);
 
 // Apply the protect middleware for the below routes
