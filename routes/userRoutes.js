@@ -13,6 +13,8 @@ router.use(authController.protect);
 router.get("/preferences", userController.preferences);
 router.put("/preferences", userController.updatePreferences);
 
+router.put("/newspreferences", userController.updateNewsPreferences);
+
 module.exports = router;
 
 // This file has the Routes defined for user
