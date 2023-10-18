@@ -10,6 +10,17 @@ const validateRegister = [
     .withMessage("Password must be at least 8 characters long"),
 ];
 
+const validateLogin = [
+  check("email")
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Invalid Email ID passed"),
+  check("password")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters long"),
+];
+
 module.exports = {
   validateRegister,
+  validateLogin,
 };
