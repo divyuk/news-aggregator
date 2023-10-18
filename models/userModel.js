@@ -29,17 +29,23 @@ const userSchema = new mongoose.Schema({
       message: "Password are not the same",
     },
   },
-  category: {
-    type: String,
-    // default: "technology",
-  },
-  sources: {
-    type: String,
-    // default: "bbc-news",
-  },
-  country: {
-    type: String,
-  },
+  categories: [
+    {
+      type: String,
+      // default: "technology",
+    },
+  ],
+  languages: [
+    {
+      type: String,
+      // default: "bbc-news",
+    },
+  ],
+  countries: [
+    {
+      type: String,
+    },
+  ],
 });
 
 // On the schema create a method of comparing password
