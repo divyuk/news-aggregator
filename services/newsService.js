@@ -14,13 +14,13 @@ module.exports = async (categories, countries, languages, keyword) => {
     const categoryString = categories.join(",");
     baseUrl += `&category=${categoryString}`;
   }
-
-  if (countries.length > 0) {
+  const filteredCountries = countries.filter((country) => countries !== null);
+  if (filteredCountries > 0) {
     const countryString = countries.join(",");
     baseUrl += `&country=${countryString}`;
   }
-
-  if (languages.length > 0) {
+  const filteredLanguages = languages.filter((language) => language !== null);
+  if (filteredLanguages.length > 0) {
     const languageString = languages.join(",");
     baseUrl += `&language=${languageString}`;
   }
