@@ -30,3 +30,27 @@ exports.updatePreferences = catchAsyn(async (req, res, next) => {
   );
   res.status(200).json({ status: "success", data: updatedPrefernces });
 });
+
+exports.updateNewsPreferences = catchAsyn(async (req, res, next) => {
+  // Find the user
+  const user = await User.findById(req.user);
+
+  // Update the user's preferences based on the request body
+  if (req.body.categories) {
+    user.categories = req.body.categories;
+  }
+  if (req.body.countries) {
+    user.countries = req.body.countries;
+  }
+  if (req.body.languages) {
+    user.languages = req.body.languages;
+  }
+
+  // Save the updated user preferences
+  await user.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "User preferences updated successfully",
+  });
+});
