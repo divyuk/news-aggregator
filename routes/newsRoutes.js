@@ -15,6 +15,8 @@ router.route("/:id/read").post(newsController.updataRead);
 // router.get("/news/read", userController.getNews);
 router.route("/read").get(newsController.getRead);
 
+router.route("/:id/read").delete(newsController.deleteRead);
+
 // router.post("/news/:id/favourite", userController.favourite);
 router.route("/:id/favourite").post(newsController.updateFavourite);
 
