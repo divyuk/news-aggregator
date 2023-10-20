@@ -114,12 +114,12 @@ exports.deleteArticles = (Model) =>
     }
 
     // Check if the article exists in the Article model
-    const article = await Article.findOne({ article_id: articleId });
+    // const article = await Article.findOne({ article_id: articleId });
 
-    if (article) {
-      //! Delete the corresponding Article from the Article model
-      await Article.findOneAndDelete({ article_id: articleId });
-    }
+    // if (article) {
+    //   //! Delete the corresponding Article from the Article model
+    //   await Article.findOneAndDelete({ article_id: articleId });
+    // }
 
     //! 3. Delete the document from the Model
     await Model.deleteOne({ newsArticle: articleId, user: userId });
