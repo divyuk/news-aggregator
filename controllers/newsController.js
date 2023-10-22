@@ -7,7 +7,8 @@ const User = require("../models/userModel");
 
 exports.news = catchAsyn(async (req, res, next) => {
   const { categories, languages, countries } = await User.findById(req.user);
-  const data = await newsService(categories, countries, languages);
+  const { page } = req.params;
+  const data = await newsService(categories, countries, languages, null, page);
   res.status(200).json({ status: "success", data });
 });
 
