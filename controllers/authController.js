@@ -33,10 +33,17 @@ exports.register = catchAsync(async (req, res, next) => {
   if (doc.length > 0)
     return next(new AppError("This email ID is already registered", 409));
 
+  //! 1a. Check if there is username is taken or not
+  const docUsername = await User.find({ username: req.body.username });
+  if (docUsername.length > 0)
+    return next(new AppError("This username is taken", 409));
+
   //! 2. New User signsup
   const newUser = await User.create({
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
+    name: req.body.name,
+    username: req.body.username,
   });
 
   //! 3. Function call to send JWT Token
