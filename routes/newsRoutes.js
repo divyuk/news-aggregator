@@ -6,8 +6,9 @@ const router = express.Router();
 
 router.use(authController.protect);
 
-// router.route("/").get(newsController.news);
 router.get("/", newsController.news);
+// router.route("/").get(newsController.news);
+router.get("/:page", newsController.news);
 
 // router.post("/news/:id/read", userController.read);
 router.route("/:id/read").post(newsController.updataRead);
