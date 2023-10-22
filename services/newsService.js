@@ -6,7 +6,7 @@ dotenv.config({ path: "./config.env" });
 const BASE_URL = process.env.NEWS_URL;
 const API_KEY = process.env.NEWSDATAAPI;
 
-module.exports = async (categories, countries, languages, keyword) => {
+module.exports = async (categories, countries, languages, keyword, page) => {
   let baseUrl = `${BASE_URL}?apiKey=${API_KEY}`;
 
   //&category=sports,bussiness,technology
@@ -25,6 +25,7 @@ module.exports = async (categories, countries, languages, keyword) => {
     baseUrl += `&language=${languageString}`;
   }
 
+  if (page) baseUrl += `&page=${page}`;
   if (keyword) baseUrl += `&q=${keyword}`;
 
   try {
