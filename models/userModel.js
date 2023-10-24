@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, "Please write a valid Email"],
   },
+  username: {
+    type: String,
+    unique: true,
+    require: [true, "Please tell your name"],
+  },
   password: {
     type: String,
     require: [true, "Please provide a password"],
@@ -29,15 +34,24 @@ const userSchema = new mongoose.Schema({
       message: "Password are not the same",
     },
   },
-  category: {
-    type: String,
-    // default: "technology",
-  },
-  sources: {
-    type: String,
-    // default: "bbc-news",
-  },
-  country: {
+  categories: [
+    {
+      type: String,
+      // default: "technology",
+    },
+  ],
+  languages: [
+    {
+      type: String,
+      // default: "bbc-news",
+    },
+  ],
+  countries: [
+    {
+      type: String,
+    },
+  ],
+  token: {
     type: String,
   },
 });

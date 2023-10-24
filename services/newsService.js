@@ -6,11 +6,26 @@ dotenv.config({ path: "./config.env" });
 const BASE_URL = process.env.NEWS_URL;
 const API_KEY = process.env.NEWSDATAAPI;
 
-module.exports = async (category, country, keyword) => {
+module.exports = async (categories, countries, languages, keyword, page) => {
   let baseUrl = `${BASE_URL}?apiKey=${API_KEY}`;
 
-  if (category) baseUrl += `&category=${category}`;
-  if (country) baseUrl += `&country=${country}`;
+  //&category=sports,bussiness,technology
+  if (categories.length > 0) {
+    const categoryString = categories.join(",");
+    baseUrl += `&category=${categoryString}`;
+  }
+  const filteredCountries = countries.filter((country) => countries !== null);
+  if (filteredCountries > 0) {
+    const countryString = countries.join(",");
+    baseUrl += `&country=${countryString}`;
+  }
+  const filteredLanguages = languages.filter((language) => language !== null);
+  if (filteredLanguages.length > 0) {
+    const languageString = languages.join(",");
+    baseUrl += `&language=${languageString}`;
+  }
+
+  if (page) baseUrl += `&page=${page}`;
   if (keyword) baseUrl += `&q=${keyword}`;
 
   try {

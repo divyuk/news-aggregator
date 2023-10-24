@@ -24,6 +24,11 @@ const createAndSendToken = (user, statusCode, res) => {
   };
   //! 3. Setting Cookie - cookiename | data | options
   res.cookie("jwt", token, cookieOptions);
+
+  //! 4. Save the token in the user model
+  user.token = token; // Set the token in the user model
+  user.save(); // Save the user model with the updated token field
+
   res.status(statusCode).send({ status: "success", token, data: { user } });
 };
 
@@ -33,11 +38,17 @@ exports.register = catchAsync(async (req, res, next) => {
   if (doc.length > 0)
     return next(new AppError("This email ID is already registered", 409));
 
+  //! 1a. Check if there is username is taken or not
+  const docUsername = await User.find({ username: req.body.username });
+  if (docUsername.length > 0)
+    return next(new AppError("This username is taken", 409));
+
   //! 2. New User signsup
   const newUser = await User.create({
-    name: req.body.name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
+    name: req.body.name,
+    username: req.body.username,
   });
 
   //! 3. Function call to send JWT Token
@@ -58,6 +69,28 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //! 3. If eveything is ok send the token to client
   createAndSendToken(user, 200, res);
+});
+
+exports.logout = catchAsync(async (req, res, next) => {
+  // await User.findByIdAndUpdate(
+  //   req.user,
+  //   {
+  //     $set: {
+  //       token: undefined,
+  //     },
+  //   },
+  //   { new: true }
+  // );
+
+  const user = await User.findById(req.user);
+  user.token = undefined;
+  await user.save();
+  // const options = {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production",
+  // };
+
+  return res.status(200).send({ status: "User logged out" });
 });
 
 exports.protect = catchAsync(async (req, res, next) => {

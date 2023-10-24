@@ -11,10 +11,10 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.preferences = catchAsyn(async (req, res, next) => {
-  const { category, sources, country } = await User.findById(req.user);
+  const { categories, languages, countries } = await User.findById(req.user);
   res
     .status(200)
-    .json({ status: "success", data: { category, sources, country } });
+    .json({ status: "success", data: { categories, languages, countries } });
 });
 
 exports.updatePreferences = catchAsyn(async (req, res, next) => {
@@ -29,4 +29,28 @@ exports.updatePreferences = catchAsyn(async (req, res, next) => {
     { new: true, runValidators: true }
   );
   res.status(200).json({ status: "success", data: updatedPrefernces });
+});
+
+exports.updateNewsPreferences = catchAsyn(async (req, res, next) => {
+  // Find the user
+  const user = await User.findById(req.user);
+
+  // Update the user's preferences based on the request body
+  if (req.body.categories) {
+    user.categories = req.body.categories;
+  }
+  if (req.body.countries) {
+    user.countries = req.body.countries;
+  }
+  if (req.body.languages) {
+    user.languages = req.body.languages;
+  }
+
+  // Save the updated user preferences
+  await user.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "User preferences updated successfully",
+  });
 });

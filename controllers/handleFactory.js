@@ -95,3 +95,34 @@ exports.getArticles = (Model) =>
     //! 5. Send the response
     res.status(200).json({ status: "success", data: newsArticles });
   });
+
+//? Factory Method to delete Articles
+exports.deleteArticles = (Model) =>
+  catchAsyn(async (req, res, next) => {
+    //! 0. Get users Id
+    const userId = req.user;
+    //! 1. Get the article id from the parameter
+    const { id: articleId } = req.params;
+
+    //! 2. Find the Corresponding Article ID
+    const doc = await Model.findOne({ newsArticle: articleId, user: userId });
+
+    if (!doc) {
+      return next(
+        new AppError("Document Not present with the given id", 404) // raise Not Found error
+      );
+    }
+
+    // Check if the article exists in the Article model
+    // const article = await Article.findOne({ article_id: articleId });
+
+    // if (article) {
+    //   //! Delete the corresponding Article from the Article model
+    //   await Article.findOneAndDelete({ article_id: articleId });
+    // }
+
+    //! 3. Delete the document from the Model
+    await Model.deleteOne({ newsArticle: articleId, user: userId });
+
+    res.status(204).json(); // Respond with a 204 status code (No Content) as the article has been successfully deleted
+  });
