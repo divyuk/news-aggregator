@@ -15,7 +15,7 @@ router.post("/login", validateLogin, handleValidation, authController.login);
 
 // Apply the protect middleware for the below routes
 router.use(authController.protect);
-
+router.post("/logout", authController.logout);
 router.get("/preferences", userController.preferences);
 router.put("/preferences", userController.updatePreferences);
 
