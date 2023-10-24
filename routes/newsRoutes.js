@@ -6,10 +6,6 @@ const router = express.Router();
 
 router.use(authController.protect);
 
-router.get("/", newsController.news);
-// router.route("/").get(newsController.news);
-router.get("/:page", newsController.news);
-
 // router.post("/news/:id/read", userController.read);
 router.route("/:id/read").post(newsController.updataRead);
 
@@ -29,5 +25,9 @@ router.route("/:id/favourite").delete(newsController.deleteFavourite);
 // router.get("/news/search/:keyword", userController.getFromKeyword);
 
 router.route("/search/:keyword").get(newsController.getFromKeyword);
+
+router.get("/", newsController.news);
+// router.route("/").get(newsController.news);
+router.get("/:page", newsController.news);
 
 module.exports = router;
