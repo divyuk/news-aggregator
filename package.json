@@ -2,11 +2,12 @@
   "name": "news-aggregator",
   "version": "1.0.0",
   "description": "RESTful API that allows users to fetch news articles",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "mocha --recursive 'test/**/*.js' --timeout 99999 --exit"
+    "test": "mocha --recursive 'test/**/*.js' --timeout 99999 --exit",
+    "vercel-build": "echo hello"
   },
   "keywords": [],
   "author": "",
