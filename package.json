@@ -2,9 +2,10 @@
   "name": "news-aggregator",
   "version": "1.0.0",
   "description": "RESTful API that allows users to fetch news articles",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "test": "mocha --recursive 'test/**/*.js' --timeout 99999 --exit"
   },
   "keywords": [],
