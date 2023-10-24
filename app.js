@@ -10,7 +10,7 @@ const app = express();
 // Middleware for parsing json.
 app.use(express.json());
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://one-news.vercel.app/",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // specified here
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
