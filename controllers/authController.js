@@ -24,6 +24,11 @@ const createAndSendToken = (user, statusCode, res) => {
   };
   //! 3. Setting Cookie - cookiename | data | options
   res.cookie("jwt", token, cookieOptions);
+
+  //! 4. Save the token in the user model
+  user.token = token; // Set the token in the user model
+  user.save(); // Save the user model with the updated token field
+
   res.status(statusCode).send({ status: "success", token, data: { user } });
 };
 
@@ -64,6 +69,28 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //! 3. If eveything is ok send the token to client
   createAndSendToken(user, 200, res);
+});
+
+exports.logout = catchAsync(async (req, res, next) => {
+  // await User.findByIdAndUpdate(
+  //   req.user,
+  //   {
+  //     $set: {
+  //       token: undefined,
+  //     },
+  //   },
+  //   { new: true }
+  // );
+
+  const user = await User.findById(req.user);
+  user.token = undefined;
+  await user.save();
+  // const options = {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production",
+  // };
+
+  return res.status(200).send({ status: "User logged out" });
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
