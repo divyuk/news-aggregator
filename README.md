@@ -1,6 +1,6 @@
 # news-aggregator
 
-Backend Application for News Client.
+Backend Application for client One News.
 
 ## Built using
 
